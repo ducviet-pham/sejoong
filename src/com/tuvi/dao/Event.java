@@ -1,11 +1,12 @@
 package com.tuvi.dao;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 
 public class Event {
 	private int evetnId;
-	private Time timePlace;
-	private Time timeCreated;
+	private Timestamp timePlace;
+	private Timestamp timeCreated;
 	private String title;
 	private String content;
 	public int getEvetnId() {
@@ -14,16 +15,16 @@ public class Event {
 	public void setEvetnId(int evetnId) {
 		this.evetnId = evetnId;
 	}
-	public Time getTimePlace() {
+	public Timestamp getTimePlace() {
 		return timePlace;
 	}
-	public void setTimePlace(Time timePlace) {
+	public void setTimePlace(Timestamp timePlace) {
 		this.timePlace = timePlace;
 	}
-	public Time getTimeCreated() {
+	public Timestamp getTimeCreated() {
 		return timeCreated;
 	}
-	public void setTimeCreated(Time timeCreated) {
+	public void setTimeCreated(Timestamp timeCreated) {
 		this.timeCreated = timeCreated;
 	}
 	public String getTitle() {
