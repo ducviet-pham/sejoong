@@ -119,6 +119,16 @@ public class DBUtil {
 		pstm.setInt(4, adminAccount.getPermission());
 		return pstm.executeUpdate();
 	}
+	
+	public static int updateAdminAccountByName(Connection conn,
+			AdminAccount adminAccount) throws SQLException {
+		String sql = "Update adminaccount set Password=?, Permission=? where UserName=?";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(3, adminAccount.getUserName());
+		pstm.setString(1, adminAccount.getPassword());
+		pstm.setInt(2, adminAccount.getPermission());
+		return pstm.executeUpdate();
+	}
 
 	public static int insertAdminAccount(Connection conn,
 			AdminAccount adminAccount) throws SQLException {
@@ -136,6 +146,18 @@ public class DBUtil {
 		// not implement
 		return 0;
 	}
+	public static int deleteAdminAccount(Connection conn, String userName)
+			throws SQLException {
+		
+		String sql = "Delete From adminaccount where UserName = ?";
+
+		PreparedStatement pstm = conn.prepareStatement(sql);
+
+		pstm.setString(1, userName);
+
+		return pstm.executeUpdate();
+	}
+	
 
 	public static List<AdminAccount> queryAdminAccount(Connection conn)
 			throws SQLException {

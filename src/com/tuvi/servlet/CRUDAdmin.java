@@ -2,12 +2,8 @@ package com.tuvi.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Date;  
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,21 +14,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.tuvi.dao.AdminAccount;
 import com.tuvi.dao.Event;
 import com.tuvi.utils.DBConnection;
 import com.tuvi.utils.DBUtil;
 
 /**
- * Servlet implementation class CRUDEvent
+ * Servlet implementation class CRUDAdmin
  */
-@WebServlet("/CRUDEvent")
-public class CRUDEvent extends HttpServlet {
+@WebServlet("/CRUDAdmin")
+public class CRUDAdmin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CRUDEvent() {
+    public CRUDAdmin() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -48,44 +45,31 @@ public class CRUDEvent extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
 		String stype = request.getParameter("type");
 		System.out.println("stype = " + stype);
 		int type = Integer.parseInt(stype);
-		System.out.println("CRUDEvent doPost");
-		System.out.println("CRUDEvent doPost type="+ type);
+		System.out.println("CRUDAdmin doPost");
+		System.out.println("CRUDAdmin doPost type="+ type);
 		
 		int result = 0;
 		PrintWriter out = response.getWriter();
 		switch (type){
 			case 1: {
 				//create
-				String stimePlace = request.getParameter("timePlace");				
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); 
-				
-				Date date = null;
-				try {
-					date = sdf.parse(stimePlace);
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					out.print (-1);
-					break;
-				}  
-				
-				Timestamp timePlace = new Timestamp(date.getTime());				
-				
-				String title = request.getParameter("title");
-				String content = request.getParameter("content");
-				
-				Event event = new Event();
-				event.setTimePlace(timePlace);
+				String userName = request.getParameter("userName");
+				String password = request.getParameter("password");
+				int permission = Integer.parseInt(request.getParameter("password"));
+				AdminAccount adminAccount = new AdminAccount();
+				adminAccount.setUserName(userName);
 				//event.setTimeCreated(timeCreated);
-				event.setTitle(title);
-				event.setContent(content);			
+				adminAccount.setPassword(password);
+				adminAccount.setPermission(permission);			
 
 				try {
-					result = DBUtil.insertEvent(DBConnection.getMySQLConnection(), event);
+					result = DBUtil.insertAdminAccount(DBConnection.getMySQLConnection(), adminAccount);
 					if (result == 1){
 						out.print(0);
 					} else {
@@ -102,33 +86,17 @@ public class CRUDEvent extends HttpServlet {
 			}
 			case 2: {
 				//update
-				String stimePlace = request.getParameter("timePlace");				
+				String userName = request.getParameter("userName");
+				String password = request.getParameter("password");
+				int permission = Integer.parseInt(request.getParameter("password"));
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); 
-				
-				Date date = null;
-				try {
-					date = sdf.parse(stimePlace);
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					out.print (-1);
-					break;
-				}  
-				
-				Timestamp timePlace = new Timestamp(date.getTime());				
-				
-				String title = request.getParameter("title");
-				String content = request.getParameter("content");
-				
-				Event event = new Event();
-				event.setTimePlace(timePlace);
-				//event.setTimeCreated(timeCreated);
-				event.setTitle(title);
-				event.setContent(content);
+				AdminAccount adminAccount = new AdminAccount();
+				adminAccount.setUserName(userName);
+				adminAccount.setPassword(password);
+				adminAccount.setPermission(permission);
 				
 				try {
-					result = DBUtil.updateEvent(DBConnection.getMySQLConnection(), event);
+					result = DBUtil.updateAdminAccountByName(DBConnection.getMySQLConnection(), adminAccount);
 					if (result == 1){
 						out.print(0);
 					} else {
@@ -146,9 +114,9 @@ public class CRUDEvent extends HttpServlet {
 			}
 			case 3: {
 				//delete
-				int id = Integer.parseInt(request.getParameter("eventId"));
+				String userName = request.getParameter("userName");
 				try {
-					result = DBUtil.deleteEvent(DBConnection.getMySQLConnection(), id);
+					result = DBUtil.deleteAdminAccount(DBConnection.getMySQLConnection(), userName);
 					out.print(0);
 				} catch (ClassNotFoundException | SQLException e) {
 					// TODO Auto-generated catch block
@@ -159,18 +127,17 @@ public class CRUDEvent extends HttpServlet {
 			}
 			case 4: {
 				//get
-				int id = Integer.parseInt(request.getParameter("eventId"));
-				System.out.println("id=" + id);
+				String userName = request.getParameter("UserName");
+				System.out.println("userName: " + userName);
 				try {
-					Event resultObject = DBUtil.getEvent(DBConnection.getMySQLConnection(), id);
+					AdminAccount resultObject = DBUtil.getAdminAccount(DBConnection.getMySQLConnection(), userName);
 					if (resultObject != null){
 						JSONObject  json = new JSONObject();
 						try {
-							//json.put("id", resultObject.getEvetnId());
-							json.put("timePlace", resultObject.getTimePlace().toString());
-							json.put("timeCreated", resultObject.getTimeCreated().toString());
-							json.put("title", resultObject.getTitle());
-							json.put("content", resultObject.getContent());						
+							json.put("userId", resultObject.getUserId());
+							json.put("userName", resultObject.getUserName());
+							json.put("password", resultObject.getPassword());
+							json.put("permission", resultObject.getPermission());						
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -191,16 +158,15 @@ public class CRUDEvent extends HttpServlet {
 			case 5: {
 				//get all
 				try {
-					ArrayList<Event> list = (ArrayList<Event>) DBUtil.queryEvent(DBConnection.getMySQLConnection());
+					ArrayList<AdminAccount> list = (ArrayList<AdminAccount>) DBUtil.queryAdminAccount(DBConnection.getMySQLConnection());
 					if (list.size() > 0){
-						for (Event event: list){
+						for (AdminAccount adminAccount: list){
 							JSONObject  json = new JSONObject();
 							try {
-								//json.put("id", resultObject.getEvetnId());
-								json.put("timePlace", event.getTimePlace().toString());
-								json.put("timeCreated", event.getTimeCreated().toString());
-								json.put("title", event.getTitle());
-								json.put("content", event.getContent());						
+								json.put("userId", adminAccount.getUserId());
+								json.put("userName", adminAccount.getUserName());
+								json.put("password", adminAccount.getPassword());
+								json.put("permission", adminAccount.getPermission());						
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -220,7 +186,6 @@ public class CRUDEvent extends HttpServlet {
 				out.print(1);
 			}
 		}
-		System.out.println("CRUDEvent doPost end");
+		System.out.println("CRUDAdmin doPost end");
 	}
-
 }
