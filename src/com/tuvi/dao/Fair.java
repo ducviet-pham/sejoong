@@ -1,13 +1,13 @@
 package com.tuvi.dao;
 
-import java.sql.Time;
+import java.sql.Timestamp;
 
 public class Fair {
 	private int id;
 	private String title;
 	private String image;
 	private String content;
-	private Time timeCreated;
+	private Timestamp timeCreated;
 	public int getId() {
 		return id;
 	}
@@ -32,10 +32,10 @@ public class Fair {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Time getTimeCreated() {
+	public Timestamp getTimeCreated() {
 		return timeCreated;
 	}
-	public void setTimeCreated(Time timeCreated) {
+	public void setTimeCreated(Timestamp timeCreated) {
 		this.timeCreated = timeCreated;
 	}
 }

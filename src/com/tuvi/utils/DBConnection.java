@@ -21,9 +21,10 @@ public class DBConnection {
 
 		Class.forName("com.mysql.jdbc.Driver");
 
-		String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName;
+		String URL_DB = "jdbc:mysql://localhost/sejoong?useSSL=false";
+		//String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName;
 
-		Connection conn = DriverManager.getConnection(connectionURL, userName,
+		Connection conn = DriverManager.getConnection(URL_DB, userName,
 				password);
 		return conn;
 	}

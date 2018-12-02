@@ -2,6 +2,7 @@ package com.tuvi.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;  
 import java.sql.SQLException;
 import java.sql.Time;
@@ -190,15 +191,36 @@ public class CRUDEvent extends HttpServlet {
 			}
 			case 5: {
 				//get all
+				try {
+					ArrayList<Event> list = (ArrayList<Event>) DBUtil.queryEvent(DBConnection.getMySQLConnection());
+					if (list.size() > 0){
+						for (Event event: list){
+							JSONObject  json = new JSONObject();
+							try {
+								//json.put("id", resultObject.getEvetnId());
+								json.put("timePlace", event.getTimePlace().toString());
+								json.put("timeCreated", event.getTimeCreated().toString());
+								json.put("title", event.getTitle());
+								json.put("content", event.getContent());						
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								continue;
+							}					
+							out.print(json.toString());	
+						}
+					}
+				} catch (ClassNotFoundException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					out.print(-1);
+				}
 				break;
 			}
 			default: {
 				
 			}
 		}
-
-		
-		
 		System.out.println("CRUDEvent doPost end");
 	}
 

@@ -1,6 +1,5 @@
 package com.tuvi.dao;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
 public class Event {
